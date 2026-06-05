@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String?
+  credits     Int          @default(0)
+  isUnlimited Boolean      @default(false)
+  generations Generation[]
+  payments    Payment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Generation {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescription String   @db.Text
+  originalCv     String   @db.Text
+  optimizedCv    String?  @db.Text
+  coverLetter    String?  @db.Text
+  summary        String?  @db.Text
+  keywords       String[] @default([])
+  atsScore       Int?
+  status         Status   @default(PENDING)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeId     String        @unique
+  amount       Int
+  currency     String        @default("usd")
+  creditsAdded Int
+  status       PaymentStatus @default(PENDING)
+  createdAt    DateTime      @default(now())
+}
+
+enum Status {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
