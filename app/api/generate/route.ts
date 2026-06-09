@@ -78,17 +78,36 @@ export async function POST(request: NextRequest) {
     try {
       const result = await generateApplication(cleanCvText, jobDescription.trim());
 
-      const updatedGeneration = await prisma.generation.update({
-        where: { id: generation.id },
-        data: {
-          optimizedCv: result.optimizedCv,
-          coverLetter: result.coverLetter,
-          summary: result.summary,
-          keywords: result.keywords,
-          atsScore: result.atsScore,
-          status: "COMPLETED",
-        },
-      });
+      await prisma.generation.update({
+		  where: { id: generation.id },
+		  data: {
+			optimizedCv:
+			  typeof result.optimizedCv === "string"
+				? result.optimizedCv
+				: JSON.stringify(result.optimizedCv, null, 2),
+
+			coverLetter:
+			  typeof result.coverLetter === "string"
+				? result.coverLetter
+				: JSON.stringify(result.coverLetter, null, 2),
+
+			summary:
+			  typeof result.summary === "string"
+				? result.summary
+				: JSON.stringify(result.summary, null, 2),
+
+			keywords: Array.isArray(result.keywords)
+			  ? result.keywords
+			  : [],
+
+			atsScore:
+			  typeof result.atsScore === "number"
+				? result.atsScore
+				: 0,
+
+			status: "COMPLETED",
+		  },
+	 });
 
       return NextResponse.json({
 		  success: true,
