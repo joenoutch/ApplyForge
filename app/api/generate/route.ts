@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     try {
       const result = await generateApplication(cleanCvText, jobDescription.trim());
 
-      await prisma.generation.update({
+      const updatedGeneration = await prisma.generation.update({
 		  where: { id: generation.id },
 		  data: {
 			optimizedCv:
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
 				: 0,
 
 			status: "COMPLETED",
-		  },
+	    },
 	 });
 
       return NextResponse.json({
