@@ -1,1 +1,0 @@
-lib/ai/openrouter.ts:      "Authorization": `Bearer ${apiKey}`,
