@@ -23,7 +23,6 @@ export default function HomePage() {
   const [result, setResult] = useState<GenerationResponse | null>(null);
   const [downloadUrl, setDownloadUrl] = useState("");
   const [accepted, setAccepted] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -43,7 +42,6 @@ export default function HomePage() {
     setMessage("");
     setResult(null);
     setDownloadUrl("");
-    setShowPayment(false);
 
     const formData = new FormData();
     formData.append("email", email);
@@ -201,41 +199,20 @@ export default function HomePage() {
               </p>
             </div>
 
-            {!showPayment && (
-              <button
-                onClick={() => setShowPayment(true)}
-                className="w-full rounded-xl bg-black px-6 py-4 font-bold text-white transition hover:bg-gray-800"
-              >
-			  <p className="text-sm text-gray-500">
-			    ApplyForge is currently free during public beta.
-			  </p>
-                Download Optimized DOCX — Free Beta 🚀
-              </button>
-            )}
+            {downloadUrl && (
+			  <div className="space-y-3">
+				<a
+				  href={downloadUrl}
+				  className="block w-full rounded-xl bg-black px-6 py-4 text-center font-bold text-white transition hover:bg-gray-800"
+				>
+				  Download Optimized DOCX — Free Beta 🚀
+				</a>
 
-            {showPayment && (
-              <div className="rounded-xl border border-amber-300 bg-amber-50 p-5 text-amber-950">
-                <h3 className="text-lg font-bold">Manual Wise Payment</h3>
-                <p className="mt-2">
-                  Send <strong>$19</strong> via Wise using the payment details provided by ApplyForge.
-                </p>
-                <p className="mt-2">
-                  Payment reference: <strong>{result.generationId}</strong>
-                </p>
-                <p className="mt-2 text-sm">
-                  After payment, send your payment confirmation and reference by email. Your DOCX download will be released after verification.
-                </p>
-
-                {downloadUrl && (
-                  <a
-                    href={downloadUrl}
-                    className="mt-5 block rounded-xl bg-emerald-500 px-6 py-4 text-center font-bold text-white transition hover:bg-emerald-600"
-                  >
-                    Download Word Document
-                  </a>
-                )}
-              </div>
-            )}
+				<p className="text-center text-sm text-gray-500">
+				  ApplyForge is currently free during public beta.
+				</p>
+			  </div>
+			)}
           </section>
         )}
       </section>

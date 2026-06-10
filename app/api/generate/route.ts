@@ -66,6 +66,28 @@ export async function POST(request: NextRequest) {
       },
     });
 
+	const startOfDay = new Date();
+	startOfDay.setHours(0, 0, 0, 0);
+
+	const todayGenerations = await prisma.generation.count({
+	  where: {
+		userId: user.id,
+		createdAt: {
+		  gte: startOfDay,
+		},
+	  },
+	});
+
+	if (todayGenerations >= 3) {
+	  return NextResponse.json(
+		{
+		  error: "Daily beta limit reached",
+		  details: "You can generate up to 3 applications per day during the free beta.",
+		},
+		{ status: 429 }
+	  );
+	}
+
     const generation = await prisma.generation.create({
       data: {
         userId: user.id,
