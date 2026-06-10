@@ -206,7 +206,10 @@ export default function HomePage() {
                 onClick={() => setShowPayment(true)}
                 className="w-full rounded-xl bg-black px-6 py-4 font-bold text-white transition hover:bg-gray-800"
               >
-                Unlock DOCX Document — $19
+			  <p className="text-sm text-gray-500">
+			    ApplyForge is currently free during public beta.
+			  </p>
+                Download Optimized DOCX — Free Beta 🚀
               </button>
             )}
 
